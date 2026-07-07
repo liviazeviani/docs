@@ -1,47 +1,179 @@
 ---
 title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+description: "Create a project, add a task, and update its status in a few requests"
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+This guide walks you through the core TaskFlow workflow: create a project, add a task to it, list your tasks, and update a task's status. By the end, you'll have made a full round-trip through the API.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+<Note>
+  The API may take up to 60 seconds to respond on the first request if it has been idle. Subsequent requests will be fast.
+</Note>
 
 ## Prerequisites
 
-Before you begin, you must have:
+You'll need an API key to authenticate requests. For testing, use the sandbox key below:
 
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
+```bash
+tf-live-4a8f2c1e9b3d7e6a
+```
 
-## Get started
+Every request must include it in the `Authorization` header as a Bearer token. See [Authentication](getting-started/authentication/) for details.
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Create a project">
+    Every task must belong to a project, so start by creating one. Only `name` is required.
 
-    ```bash
-    npm install your-package
+    <CodeGroup>
+
+    ```bash curl
+      curl -X POST https://test-writechoice.onrender.com/projects \
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "name": "API Documentation Revamp",
+          "description": "Rewriting all public-facing API docs for v2."
+        }'
+    ```
+
+    </CodeGroup>
+
+    You'll get back a `project_id` — save it, you'll need it for the next step.
+
+    ```json Response
+      {
+        "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "name": "API Documentation Revamp",
+        "description": "Rewriting all public-facing API docs for v2.",
+        "created_at": "2025-05-12T10:30:00.000Z"
+      }
     ```
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+  <Step title="Create a task">
+    Using the `project_id` from the previous step, create a task. New tasks always start with a status of `pending`.
 
-    ```bash
-    your-cli init
+    <CodeGroup>
+
+    ```bash curl
+      curl -X POST https://test-writechoice.onrender.com/tasks \
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "title": "Write introduction page",
+          "description": "Draft the overview and getting started sections."
+        }'
+    ```
+
+    </CodeGroup>
+
+    ```json Response
+      {
+        "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+        "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "title": "Write introduction page",
+        "description": "Draft the overview and getting started sections.",
+        "status": "pending",
+        "created_at": "2025-05-12T10:35:00.000Z",
+        "updated_at": "2025-05-12T10:35:00.000Z"
+      }
+    ```
+
+    <Tip>
+      If you use a `project_id` that doesn't exist, this request returns a `404`. Make sure you created a project first.
+    </Tip>
+  </Step>
+  <Step title="List tasks in the project">
+    Retrieve every task that belongs to a project.
+
+    <CodeGroup>
+
+    ```bash curl
+      curl https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks \
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+    ```
+
+    </CodeGroup>
+
+    ```json Response
+      {
+        "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "total": 1,
+        "tasks": [
+          {
+            "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+            "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "title": "Write introduction page",
+            "description": "Draft the overview and getting started sections.",
+            "status": "pending",
+            "created_at": "2025-05-12T10:35:00.000Z",
+            "updated_at": "2025-05-12T10:35:00.000Z"
+          }
+        ]
+      }
     ```
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
+  <Step title="Update the task's status">
+    Once you start working on a task, update its status to `in_progress`. You only need to send the fields you want to change.
 
-    ```bash
-    your-cli start
+    <CodeGroup>
+
+    ```bash curl
+      curl -X PATCH https://test-writechoice.onrender.com/tasks/f9e8d7c6-b5a4-3210-fedc-ba9876543210 \
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "status": "in_progress"
+        }'
     ```
+
+    </CodeGroup>
+
+    ```json Response
+      {
+        "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+        "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "title": "Write introduction page",
+        "description": "Draft the overview and getting started sections.",
+        "status": "in_progress",
+        "created_at": "2025-05-12T10:35:00.000Z",
+        "updated_at": "2025-05-12T11:00:00.000Z"
+      }
+    ```
+
+    Valid values for `status` are `pending`, `in_progress`, and `done`.
+  </Step>
+  <Step title="Delete the task (optional)">
+    When a task is no longer needed, delete it permanently.
+
+    <CodeGroup>
+
+    ```bash curl
+      curl -X DELETE https://test-writechoice.onrender.com/tasks/f9e8d7c6-b5a4-3210-fedc-ba9876543210 \
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+    ```
+
+    </CodeGroup>
+
+    ```json Response
+      {
+        "message": "Task 'f9e8d7c6-b5a4-3210-fedc-ba9876543210' was successfully deleted."
+      }
+    ```
+
+    <Warning>
+      This action cannot be undone.
+    </Warning>
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+## Next steps
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="key" href="/authentication">
+    Learn more about API keys and error responses
+  </Card>
+
+  <Card title="API Reference" icon="code" href="/api-reference">
+    See the full list of endpoints and parameters
+  </Card>
+</CardGroup>
