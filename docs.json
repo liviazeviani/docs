@@ -66,7 +66,7 @@
     }
   },
   "api": {
-    "openapi": "openapi.yaml"
+    "openapi": "api-reference/openapi.yaml"
   },
   "description": "A simple task management API."
 }
