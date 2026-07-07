@@ -21,28 +21,12 @@
         ]
       }
     ],
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "index",
-              "quickstart",
-              "authentication",
-              "error-handling"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "Endpoints",
-            "openapi": "openapi.yaml"
-          }
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "quickstart"
         ]
       }
     ]
@@ -82,7 +66,7 @@
     }
   },
   "api": {
-    "openapi": "api-reference/openapi.yaml"
+    "openapi": "openapi.yaml"
   },
-  "description": "A a simple task management API."
+  "description": "A simple task management API."
 }
