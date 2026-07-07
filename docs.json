@@ -40,7 +40,9 @@
             "group": "Getting Started",
             "pages": [
               "index",
-              "quickstart"
+              "quickstart",
+              "untitled-page",
+              "error-handling"
             ]
           }
         ]
