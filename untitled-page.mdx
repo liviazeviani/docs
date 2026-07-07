@@ -1,3 +1,79 @@
 ---
 title: "Authentication"
+description: "How to authenticate your requests to the TaskFlow API"
 ---
+
+Every request to the TaskFlow API requires authentication. Requests without a valid API key will fail with a `401 Unauthorized` error.
+
+## Authenticating requests
+
+Include your API key in the `Authorization` header of every request, using the `Bearer` scheme:
+
+```bash
+Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
+```
+
+<Note>
+  This is a shared sandbox key for testing this documentation. In a production environment, each user would receive their own unique API key.
+</Note>
+
+Here's a full example using the key to create a project:
+
+```bash curl
+curl -X POST https://test-writechoice.onrender.com/projects \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Documentation Revamp"
+  }'
+```
+
+## Missing or invalid API keys
+
+If the `Authorization` header is missing, malformed, or contains an invalid key, every endpoint returns the same error shape:
+
+```json 401 Unauthorized
+{
+  "error": "Unauthorized",
+  "message": "Missing or invalid API key. Provide a valid key in the Authorization header as: Bearer <api_key>"
+}
+```
+
+This applies uniformly across the API — every endpoint documented in the [API Reference](/api-reference) can return this error, so you only need to handle it once in your integration.
+
+Common causes:
+
+<AccordionGroup>
+  <Accordion title="No Authorization header sent">
+    Make sure every request includes the header, even for `GET` requests.
+
+    ```bash
+        # Missing header — this will fail
+        curl https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks
+    ```
+  </Accordion>
+
+  <Accordion title="Missing the 'Bearer' prefix">
+    The header value must include the word `Bearer` followed by a space, then the key.
+
+    ```bash
+        # Wrong
+        -H "Authorization: tf-live-4a8f2c1e9b3d7e6a"
+    
+        # Correct
+        -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+    ```
+  </Accordion>
+
+  <Accordion title="Typo or truncated key">
+    Double-check the key was copied in full, with no extra whitespace or line breaks.
+  </Accordion>
+</AccordionGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="API Reference" icon="code" href="/api-reference">
+    Explore every endpoint in detail
+  </Card>
+</CardGroup>
