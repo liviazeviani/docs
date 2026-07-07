@@ -126,3 +126,10 @@ Returned when the resource referenced in the request doesn't exist. This can hap
 <Note>
   The TaskFlow test server spins down when idle. The first request after a period of inactivity can take up to **60 seconds** to respond. This is expected behavior, not an error — if a request seems to hang, wait for it to complete or retry after the first response arrives. Subsequent requests respond normally.
 </Note>
+
+## Best practices
+
+- **Check the status code before parsing the body.** Success responses (`200`, `201`) return the resource; error responses return the `error` object.
+- **Log the `message` field.** Error messages are designed to be self-explanatory and usually point to the exact fix.
+- **Don't retry `400` or `404` errors without changing the request.** These indicate a problem with the request itself, so retrying the same call will fail again. Fix the body or the ID first.
+- **Treat `401` as a configuration issue.** Verify the key and header format once, then all requests should authenticate consistently.
