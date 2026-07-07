@@ -1,3 +1,128 @@
 ---
 title: "Error Handling"
+description: "Understand the error format used by the TaskFlow API and how to resolve each error type."
 ---
+
+The TaskFlow API uses standard HTTP status codes to indicate whether a request succeeded or failed. When something goes wrong, the response body always contains a JSON object describing the problem, so you can diagnose and fix it programmatically or by reading the message directly.
+
+## Error response format
+
+Every error response follows the same structure:
+
+```json
+{
+  "error": "Not Found",
+  "message": "No project found with project_id 'abc123'."
+}
+```
+
+<ResponseField name="error" type="string">
+  A short, machine-friendly error type that matches the HTTP status (for example, `Bad Request`, `Unauthorized`, `Not Found`).
+</ResponseField>
+
+<ResponseField name="message" type="string">
+  A human-readable explanation of what went wrong. Messages are written to be actionable — they often tell you exactly which field is missing or which value is invalid.
+</ResponseField>
+
+## HTTP status codes
+
+| Code | Meaning | When it happens |
+| --- | --- | --- |
+| `200` | OK | The request succeeded (task listed, updated, or deleted). |
+| `201` | Created | A project or task was created successfully. |
+| `400` | Bad Request | The request body is missing, malformed, or contains an invalid value. |
+| `401` | Unauthorized | The API key is missing or invalid. |
+| `404` | Not Found | The `project_id` or `task_id` in the request doesn't exist. |
+
+## Common errors and how to fix them
+
+### 400 Bad Request
+
+Returned when the request body doesn't meet the endpoint's requirements. The two most common causes are a missing required field and an invalid `status` value.
+
+**Missing required field** — for example, creating a project without a `name`:
+
+```json
+{
+  "error": "Bad Request",
+  "message": "The 'name' field is required and must be a non-empty string."
+}
+```
+
+**Invalid status value** — the `status` field only accepts `pending`, `in_progress`, or `done`:
+
+```json
+{
+  "error": "Bad Request",
+  "message": "Invalid status 'completed'. Allowed values are: pending, in_progress, done."
+}
+```
+
+<Tip>
+  A frequent mistake is sending `completed` instead of `done`, or `in-progress` (with a hyphen) instead of `in_progress`. Check the [Update a task](/api-reference/update-a-task) reference for the exact accepted values.
+</Tip>
+
+**How to fix:** compare your request body against the endpoint's reference page. Make sure required fields are present, strings are non-empty, and enum values match exactly.
+
+### 401 Unauthorized
+
+Returned when the `Authorization` header is missing or the API key is invalid. Every endpoint requires authentication.
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Missing or invalid API key. Provide a valid key in the Authorization header as: Bearer <api_key>"
+}
+```
+
+**How to fix:** include the header in every request, with the `Bearer` prefix followed by a space:
+
+```bash
+curl https://test-writechoice.onrender.com/projects \
+  --header "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+```
+
+See [Authentication](/authentication) for a full list of common causes, such as typos in the key or a missing `Bearer` prefix.
+
+### 404 Not Found
+
+Returned when the resource referenced in the request doesn't exist. This can happen in three situations:
+
+**The `project_id` doesn't exist** when creating a task:
+
+```json
+{
+  "error": "Not Found",
+  "message": "No project found with project_id 'abc123'. Create a project first using POST /projects."
+}
+```
+
+**The `project_id` doesn't exist** when listing tasks:
+
+```json
+{
+  "error": "Not Found",
+  "message": "No project found with project_id 'abc123'."
+}
+```
+
+**The `task_id` doesn't exist** when updating or deleting a task:
+
+```json
+{
+  "error": "Not Found",
+  "message": "No task found with task_id 'abc123'."
+}
+```
+
+**How to fix:** TaskFlow resources depend on each other — a task can only exist inside a project. If you get a 404:
+
+1. Confirm you copied the full ID from the creation response, with no truncation or extra whitespace.
+2. If the project was never created, create it first with [`POST /projects`](/api-reference/create-a-project) and use the returned `project_id`.
+3. If the task was already deleted, its `task_id` is gone permanently — deletions cannot be undone.
+
+## Troubleshooting request timeouts
+
+<Note>
+  The TaskFlow test server spins down when idle. The first request after a period of inactivity can take up to **60 seconds** to respond. This is expected behavior, not an error — if a request seems to hang, wait for it to complete or retry after the first response arrives. Subsequent requests respond normally.
+</Note>
