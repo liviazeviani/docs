@@ -8,7 +8,7 @@
     "dark": "#f6230f"
   },
   "favicon": {
-    "light": "/favicon.svg",
+    "light": "/images/TASKFLOW.png",
     "dark": "/images/codificacao.png"
   },
   "navigation": {
@@ -48,8 +48,8 @@
     ]
   },
   "logo": {
-    "light": "/images/codificacao.png",
-    "dark": "/images/codificacao.png"
+    "light": "/images/TASKFLOW.png",
+    "dark": "/images/TASKFLOW.png"
   },
   "navbar": {
     "links": [
