@@ -48,8 +48,8 @@
     ]
   },
   "logo": {
-    "light": "/images/TASKFLOW.png",
-    "dark": "/images/TASKFLOW.png"
+    "light": "/images/logo.png",
+    "dark": "/images/logo.png"
   },
   "navbar": {
     "links": [
