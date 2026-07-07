@@ -41,7 +41,7 @@
             "pages": [
               "index",
               "quickstart",
-              "untitled-page",
+              "authentication",
               "error-handling"
             ]
           }
