@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Technical-Writing-Test-TaskFlow-API",
+  "name": "TaskFlow API",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#f05d3e",
+    "light": "#f38e79",
+    "dark": "#f6230f"
   },
   "favicon": "/favicon.svg",
   "navigation": {
@@ -61,7 +61,7 @@
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:liviapavinizeviani@gmail.com"
       }
     ],
     "primary": {
@@ -84,12 +84,11 @@
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/liviazeviani/docs"
     }
   },
   "api": {
     "openapi": "api-reference/openapi.yaml"
-  }
+  },
+  "description": "A a simple task management API."
 }
