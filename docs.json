@@ -5,7 +5,7 @@
   "colors": {
     "primary": "#f05d3e",
     "light": "#f38e79",
-    "dark": "#f6230f"
+    "dark": "#c2410c"
   },
   "favicon": {
     "light": "/images/codificacao.png",
@@ -21,12 +21,28 @@
         ]
       }
     ],
-    "groups": [
+    "tabs": [
       {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "index",
+              "quickstart",
+              "authentication",
+              "error-handling"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Endpoints",
+            "openapi": "openapi.yaml"
+          }
         ]
       }
     ]
@@ -43,9 +59,8 @@
       }
     ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/liviazeviani/docs"
     }
   },
   "contextual": {
