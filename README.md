@@ -29,5 +29,10 @@ mint dev
 
 The site will be available at `http://localhost:3000`, with live reload on every save.
 
+## Process and decisions
+
+**Process**: I started setting up Mintlify project, defined the structure, wrote the guide pages, and configured the API Reference to be generated directly from the OpenAPI spec.
+ I tested the endpoints using Postman to verify that the responses and error messages matched what I had documented.
+
 
 
